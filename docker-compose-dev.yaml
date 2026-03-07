@@ -4,8 +4,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      postgres:
-        condition: service_started
+#      postgres:
+#        condition: service_started
       redis:
         condition: service_started
     build:
@@ -18,10 +18,9 @@ services:
       - SERVER_URL
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
-      - JWT_EXPIRATION_SECONDS=${JWT_EXPIRATION_SECONDS}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_DATABASE}
-      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_DATABASE}
+#      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+#      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_DATA_REDIS_URL=redis://redis:6379
 
   redis:
@@ -32,18 +31,18 @@ services:
     volumes:
       - redis_data:/data
 
-  postgres:
-    image: postgres:15-alpine
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+#  postgres:
+#    image: postgres:15-alpine
+#    restart: unless-stopped
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=${DB_DATABASE}
+#      - POSTGRES_USER=${DB_USERNAME}
+#      - POSTGRES_PASSWORD=${DB_PASSWORD}
 volumes:
-  postgres_data:
+#  postgres_data:
   maven-cache:
   redis_data:
