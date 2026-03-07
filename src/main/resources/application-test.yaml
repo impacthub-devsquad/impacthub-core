@@ -6,3 +6,16 @@ spring:
     url: jdbc:h2:mem:test
     username: test
     password: test
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
+
+token:
+  issuer: "${TOKEN_ISSUER:default_issuer}"
+  secret: "${TOKEN_SECRET:default_secret}"

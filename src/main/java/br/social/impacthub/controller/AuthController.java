@@ -1,0 +1,14 @@
+package br.social.impacthub.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/auth")
+public class AuthController {
+    public void register() {
+    }
+
+    public void login() {
+    }
+}

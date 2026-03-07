@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  cache:
+    type: REDIS
+
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
+    web:
+      pageable:
+        max-page-size: 50
+
+  token:
+    secret: ${JWT_SECRET:secret}
+    issuer: ${JWT_ISSUER:issuer}
+
+springdoc:
+  writer-with-default-pretty-printer: true
+  swagger-ui:
+    syntaxHighlight:
+      activated: true

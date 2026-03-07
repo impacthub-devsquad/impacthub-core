@@ -6,12 +6,18 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity @Table(name = "user_credentials")
 @Data @AllArgsConstructor @NoArgsConstructor
-public class UserCredentials {
+public class UserCredentials implements UserDetails {
     @Column(name = "user_id")
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -26,4 +32,27 @@ public class UserCredentials {
     @Column(name = "encrypted_password")
     @NotNull
     private String encryptedPassword;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == UserRole.ADMIN){
+            return List.of(
+                    new SimpleGrantedAuthority("ADMIN"),
+                    new SimpleGrantedAuthority("USER")
+            );
+        }
+        else {
+            return List.of(
+                    new SimpleGrantedAuthority("USER")
+            );
+        }
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return this.encryptedPassword;
+    }
 }
