@@ -35,11 +35,19 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
+                /*
+                * This configuration permit to load h2-console
+                * **/
+                .headers(headers -> headers
+                        .frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin())
+                )
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/h2-console/**", "/h2-console").permitAll()
                         .anyRequest().authenticated()
                 )
 
