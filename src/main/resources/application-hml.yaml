@@ -3,27 +3,23 @@ server:
 
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   cache:
     type: REDIS
+
+  data:
+    web:
+      pageable:
+        max-page-size: 50
 
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
 
-  data:
-    redis:
-      url: ${REDIS_URL:redis://localhost:6379}
-    web:
-      pageable:
-        max-page-size: 50
 
 token:
   secret: ${JWT_SECRET:secret}

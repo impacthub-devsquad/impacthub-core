@@ -9,8 +9,7 @@ services:
     volumes:
       - maven-cache:/root/.m2
     environment:
-      - APP_VERSION
-      - SERVER_URL
+      - ACTIVE_PROFILE=prod
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
       - SPRING_DATASOURCE_URL=${DB_URL}
