@@ -1,11 +1,14 @@
 package br.social.impacthub.config.security;
 
-import br.social.impacthub.service.TokenService;
-import br.social.impacthub.service.UserCredentialsService;
+import br.social.impacthub.service.security.AuthService;
+import br.social.impacthub.service.security.TokenService;
+import br.social.impacthub.service.security.UserCredentialsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,14 +19,14 @@ import java.io.IOException;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
-
-    private TokenService tokenService;
-
     private UserCredentialsService userCredentialsService;
+    private AuthService authService;
+    private AuthenticationManager authenticationManager;
 
-    public AuthenticationFilter(TokenService tokenService, UserCredentialsService userCredentialsService) {
-        this.tokenService = tokenService;
+    public AuthenticationFilter(UserCredentialsService userCredentialsService, AuthService authService, @Lazy AuthenticationManager authenticationManager) {
         this.userCredentialsService = userCredentialsService;
+        this.authService = authService;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -45,10 +48,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void authenticateUser(String token) {
-        String login = tokenService.validateTokenAndRetrieveUsername(token);
-        UserDetails userDetails = userCredentialsService.loadUserByUsername(login);
-        var userPassToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
+        authService.validateAccessToken(token);
+        UserDetails user = userCredentialsService.getById(
+                authService.getUserId(token)
+        );
+        var userPassToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+        authenticationManager.authenticate(userPassToken);
         SecurityContextHolder.getContext().setAuthentication(userPassToken);
     }
 }
