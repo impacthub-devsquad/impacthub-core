@@ -17,13 +17,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity @Table(name = "user_credentials")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Data @AllArgsConstructor @NoArgsConstructor
 public class UserCredentials implements UserDetails {
     @Column(name = "user_id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotNull

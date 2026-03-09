@@ -1,14 +1,49 @@
 package br.social.impacthub.controller;
 
+import br.social.impacthub.model.dto.*;
+import br.social.impacthub.service.security.AuthService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-    public void register() {
+    private AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
-    public void login() {
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterUserRequest request) {
+        authService.register(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<StandardResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = authService.login(request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(StandardResponse.success(response));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody RefreshRequest request) {
+        LoginResponse response = authService.refresh(request);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 }
