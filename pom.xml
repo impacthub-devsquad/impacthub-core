@@ -55,7 +55,14 @@
 			<optional>true</optional>
 		</dependency>
 
-<!--		CORE -->
+<!--		DOCS -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+
+		<!--		CORE -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

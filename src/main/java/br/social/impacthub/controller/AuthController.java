@@ -2,7 +2,7 @@ package br.social.impacthub.controller;
 
 import br.social.impacthub.model.dto.*;
 import br.social.impacthub.service.security.AuthService;
-import jakarta.transaction.Transactional;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication")
 public class AuthController {
     private AuthService authService;
 

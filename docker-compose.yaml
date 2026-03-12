@@ -9,6 +9,7 @@ services:
     volumes:
       - maven-cache:/root/.m2
     environment:
+      - APP_URL
       - ACTIVE_PROFILE=prod
       - JWT_SECRET=${JWT_SECRET}
       - JWT_ISSUER=${JWT_ISSUER}
