@@ -22,7 +22,8 @@ public class UserProfileService {
                 userProfileRepository.save(
                         new UserProfile(
                                 userId,
-                                username
+                                username,
+                                ""
                         )
                 )
         );

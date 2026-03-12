@@ -18,4 +18,7 @@ public class UserProfile {
 
     @NotNull
     private String username;
+
+    @NotNull
+    private String description;
 }
