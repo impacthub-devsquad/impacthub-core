@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,9 +27,6 @@ public class Ong {
 
     @NotNull
     private String description;
-
-    @OneToMany(mappedBy = "ong")
-    private Set<Event> events;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

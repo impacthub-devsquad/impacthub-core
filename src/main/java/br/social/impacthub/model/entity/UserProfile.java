@@ -20,7 +20,4 @@ public class UserProfile {
     private String username;
 
     private String description;
-
-    @OneToMany(mappedBy = "user_id")
-    private RefreshToken token;
 }

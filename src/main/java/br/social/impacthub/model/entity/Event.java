@@ -30,11 +30,4 @@ public class Event {
     @JoinColumn(name = "ong_id")
     private Ong ong;
 
-    @ManyToMany
-    @JoinTable(
-            name = "event_participant",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<UserCredentials> participants;
 }

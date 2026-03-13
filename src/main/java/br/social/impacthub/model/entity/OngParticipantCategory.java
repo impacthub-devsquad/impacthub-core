@@ -15,10 +15,10 @@ import java.util.UUID;
 @NoArgsConstructor
 
 public class OngParticipantCategory {
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "ong_participant_category_id")
-    private UUID categoryId;
+    private Integer categoryId;
 
     @NotNull
     private String name;

@@ -6,21 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Entity
-@Table
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@IdClass(EventParticipantId.class)
 
-public class EventParticipant {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "event_id")
+public class OngParticipantId {
     private Event event;
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "user_id")
     private UserProfile user;
 }
