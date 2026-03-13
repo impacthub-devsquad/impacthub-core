@@ -17,7 +17,7 @@ import java.util.UUID;
 public class OngParticipantCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ong_participant_category_id")
+    @Column(name = "category_id")
     private Integer categoryId;
 
     @NotNull

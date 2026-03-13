@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class OngParticipantId {
-    private Event event;
+    private Ong ong;
     private UserProfile user;
 }

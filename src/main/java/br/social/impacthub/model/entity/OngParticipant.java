@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 public class OngParticipant {
     @Id
     @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @JoinColumn(name = "ong_id")
+    private Ong ong;
 
     @Id
     @ManyToOne
