@@ -1,23 +1,33 @@
 package br.social.impacthub.model.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
-@Entity @Table(name = "user_profile")
-@Data @AllArgsConstructor @NoArgsConstructor
-public class UserProfile {
+@Entity
+@Table(name = "event")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Event {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
-    private UUID userId;
+    @Column(name = "event_id")
+    private UUID eventId;
 
     @NotNull
-    private String username;
+    private String title;
 
+    @NotNull
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "ong_id")
+    private Ong ong;
+
 }
