@@ -16,8 +16,9 @@ public class RefreshToken {
     @Id
     private UUID id;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserProfile user;
 
     @Column(name = "expiration_timestamp")
     private Instant expiration;
