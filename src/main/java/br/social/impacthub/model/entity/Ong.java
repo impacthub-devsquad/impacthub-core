@@ -33,6 +33,6 @@ public class Ong {
     private OngCategory category;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_owner_id")
     private UserProfile userProfile;
 }

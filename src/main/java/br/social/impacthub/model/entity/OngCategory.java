@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
@@ -13,11 +14,11 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class OngCategory {
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Id
-    @Column(name = "ong_category_id")
-    private UUID OngCategoryId;
+    @Column(name = "category_id")
+    private Integer ongCategoryId;
 
     @NotNull
     private String name;
