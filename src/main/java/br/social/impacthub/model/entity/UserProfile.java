@@ -12,7 +12,6 @@ import java.util.UUID;
 @Entity @Table(name = "user_profile")
 @Data @AllArgsConstructor @NoArgsConstructor
 public class UserProfile {
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Id
     private UUID userId;
 

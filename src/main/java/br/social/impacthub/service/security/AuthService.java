@@ -2,6 +2,7 @@ package br.social.impacthub.service.security;
 
 import br.social.impacthub.exception.InvalidAccessTokenException;
 import br.social.impacthub.exception.UserNotAuthenticatedException;
+import br.social.impacthub.exception.WrongCredentialsException;
 import br.social.impacthub.model.dto.LoginRequest;
 import br.social.impacthub.model.dto.LoginResponse;
 import br.social.impacthub.model.dto.RefreshRequest;
@@ -12,6 +13,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +45,11 @@ public class AuthService {
     @Transactional
     public LoginResponse login(LoginRequest request){
         Authentication auth = new UsernamePasswordAuthenticationToken(request.email(), request.password());
-        authenticationManager.authenticate(auth);
+        try {
+            authenticationManager.authenticate(auth);
+        } catch (BadCredentialsException e) {
+            throw new WrongCredentialsException();
+        }
 
         UUID userId = userCredentialsService.getByEmail(request.email()).userId();
         return tokenService.login(userId);
