@@ -59,7 +59,7 @@ public class UserCredentialsService implements UserDetailsService {
         );
 
         applicationEventPublisher.publishEvent(
-                new UserCredentialsCreatedEvent(response.userId(), response.username(), this)
+                new UserCredentialsCreatedEvent(response.userId(), response.username(), email, this)
         );
 
         return response;
@@ -72,7 +72,7 @@ public class UserCredentialsService implements UserDetailsService {
         );
     }
 
-    public UserDetails getById(UUID userId) {
+    public UserCredentials getById(UUID userId) {
         return userCredentialsRepository.findById(userId)
                 .orElseThrow(() -> new UserNotExistsException());
     }
