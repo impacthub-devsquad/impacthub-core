@@ -1,9 +1,10 @@
-package br.social.impacthub.service;
+package br.social.impacthub.model.dto;
 
 import java.util.UUID;
 
 public record UserProfileResponse(
         UUID userId,
-        String username
+        String username,
+        String email
 ) {
 }

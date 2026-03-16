@@ -1,5 +1,8 @@
 package br.social.impacthub.config.security;
 
+import br.social.impacthub.exception.UserNotExistsException;
+import br.social.impacthub.exception.WrongCredentialsException;
+import br.social.impacthub.model.entity.UserCredentials;
 import br.social.impacthub.service.security.AuthService;
 import br.social.impacthub.service.security.TokenService;
 import br.social.impacthub.service.security.UserCredentialsService;
@@ -44,16 +47,20 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String retrieveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+        try {
+            return request.getHeader("Authorization").replace("Bearer ", "").trim();
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     private void authenticateUser(String token) {
         authService.validateAccessToken(token);
-        UserDetails user = userCredentialsService.getById(
+        UserCredentials user = userCredentialsService.getById(
                 authService.getUserId(token)
         );
-        var userPassToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
-        authenticationManager.authenticate(userPassToken);
+        var userPassToken = new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(userPassToken);
     }
 }

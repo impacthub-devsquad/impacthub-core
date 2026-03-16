@@ -2,6 +2,7 @@ package br.social.impacthub.model.entity;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,5 +19,9 @@ public class UserProfile {
     @NotNull
     private String username;
 
+    @Email
+    private String email;
+
+    @NotNull
     private String description;
 }
