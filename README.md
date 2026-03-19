@@ -17,7 +17,7 @@ API RESTful
 
 ## Sobre
 
-Projeto voluntário desenvolvido como proposta 
+Projeto voluntário desenvolvido como proposta da comunidade DevSquad.
 
 ## Tecnologias
 
