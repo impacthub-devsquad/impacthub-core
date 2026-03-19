@@ -5,6 +5,7 @@ import br.social.impacthub.exception.UserNotExistsException;
 import br.social.impacthub.exception.UsernameOrEmailAlreadyExistsException;
 import br.social.impacthub.model.dto.UserCredentialsResponse;
 import br.social.impacthub.model.entity.UserCredentials;
+import br.social.impacthub.model.entity.UserProfile;
 import br.social.impacthub.model.entity.UserRole;
 import br.social.impacthub.repository.UserCredentialsRepository;
 import br.social.impacthub.service.mapper.UserCredentialsMapper;
@@ -75,5 +76,17 @@ public class UserCredentialsService implements UserDetailsService {
     public UserCredentials getById(UUID userId) {
         return userCredentialsRepository.findById(userId)
                 .orElseThrow(() -> new UserNotExistsException());
+    }
+
+    public void deleteById(UUID userID) {
+        userCredentialsRepository.deleteById(userID);
+    }
+
+    public void updateProfile(UserProfile userProfile) {
+        var userCredentials = userCredentialsRepository.findById(userProfile.getUserId())
+                .orElseThrow(() -> new UserNotExistsException());
+
+        userCredentials.setUsername(userProfile.getUsername());
+        userCredentialsRepository.save(userCredentials);
     }
 }

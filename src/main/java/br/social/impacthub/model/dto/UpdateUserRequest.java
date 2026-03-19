@@ -1,9 +1,12 @@
 package br.social.impacthub.model.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.Optional;
+
 public record UpdateUserRequest (
-        String username,
-        String email,
-        String password,
-        String description
+        Optional<@NotBlank String> username,
+        Optional<@NotBlank String> description
 ){
 }
