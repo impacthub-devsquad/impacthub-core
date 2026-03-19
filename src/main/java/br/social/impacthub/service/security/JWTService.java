@@ -168,7 +168,7 @@ public class JWTService implements TokenService{
             throw new InvalidAccessTokenException("Access Token expired");
         }
         catch (Exception exception){
-            throw new InvalidAccessTokenException("Invalid access token");
+            throw new InvalidRefreshTokenException("Invalid access token");
         }
     }
 
