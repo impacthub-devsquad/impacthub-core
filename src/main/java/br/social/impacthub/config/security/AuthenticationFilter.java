@@ -60,7 +60,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         UserCredentials user = userCredentialsService.getById(
                 authService.getUserId(token)
         );
-        var userPassToken = new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities());
+        var userPassToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(userPassToken);
     }
 }

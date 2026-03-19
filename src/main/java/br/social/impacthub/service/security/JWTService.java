@@ -165,7 +165,7 @@ public class JWTService implements TokenService{
             verifier.verify(accessToken);
         }
         catch (TokenExpiredException exception){
-            throw new InvalidAccessTokenException("Refresh token expired");
+            throw new InvalidAccessTokenException("Access Token expired");
         }
         catch (Exception exception){
             throw new InvalidAccessTokenException("Invalid access token");
