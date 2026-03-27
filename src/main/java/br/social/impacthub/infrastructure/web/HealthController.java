@@ -1,4 +1,4 @@
-package br.social.impacthub.controller;
+package br.social.impacthub.infrastructure.web;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

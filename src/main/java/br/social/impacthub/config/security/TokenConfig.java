@@ -1,6 +1,6 @@
 package br.social.impacthub.config.security;
 
-import br.social.impacthub.repository.RefreshTokenRepository;
+import br.social.impacthub.infrastructure.persistence.RefreshTokenRepository;
 import br.social.impacthub.service.security.JWTService;
 import br.social.impacthub.service.security.TokenService;
 import org.springframework.context.annotation.Bean;
