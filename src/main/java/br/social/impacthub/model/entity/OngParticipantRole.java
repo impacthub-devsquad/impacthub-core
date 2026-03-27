@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@Table(name = "ong_participant_category")
+@Table(name = "ong_participant_role")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class OngParticipantCategory {
+public class OngParticipantRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "category_id")
-    private Integer categoryId;
+    @Column(name = "role_id")
+    private Integer roleId;
 
     @NotNull
     private String name;

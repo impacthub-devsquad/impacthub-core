@@ -27,7 +27,7 @@ public class OngParticipant {
 
     @ManyToOne
     @JoinColumn(name = "role")
-    private OngParticipantCategory OngParticipant;
+    private OngParticipantRole role;
 
 }
 
