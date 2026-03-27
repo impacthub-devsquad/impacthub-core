@@ -1,16 +1,16 @@
 package br.social.impacthub.service.security;
 
 import br.social.impacthub.exception.InvalidAccessTokenException;
+import br.social.impacthub.exception.InvalidEmailAddressException;
 import br.social.impacthub.exception.UserNotAuthenticatedException;
 import br.social.impacthub.exception.WrongCredentialsException;
-import br.social.impacthub.model.dto.LoginRequest;
-import br.social.impacthub.model.dto.LoginResponse;
-import br.social.impacthub.model.dto.RefreshRequest;
-import br.social.impacthub.model.dto.RegisterUserRequest;
+import br.social.impacthub.infrastructure.web.EmailValidatorClient;
+import br.social.impacthub.model.dto.*;
 import br.social.impacthub.model.dto.security.AuthenticatedUser;
 import br.social.impacthub.model.entity.UserCredentials;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,18 +28,42 @@ public class AuthService {
     private TokenService tokenService;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
+    private EmailValidatorClient emailValidatorClient;
 
-    public AuthService(UserCredentialsService userCredentialsService, TokenService tokenService, PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager) {
+    public AuthService(
+            UserCredentialsService userCredentialsService,
+            TokenService tokenService,
+            PasswordEncoder passwordEncoder,
+            @Lazy AuthenticationManager authenticationManager,
+            EmailValidatorClient emailValidatorClient
+    ) {
         this.userCredentialsService = userCredentialsService;
         this.tokenService = tokenService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.emailValidatorClient = emailValidatorClient;
     }
 
     @Transactional
     public void register(@Valid RegisterUserRequest request){
+        validateEmailWithClient(request.email());
+
         String encryptedPassword = passwordEncoder.encode(request.password());
         userCredentialsService.create(request.username(), request.email(), encryptedPassword);
+    }
+
+    private void validateEmailWithClient(String email){
+        EmailValidatorResponse response = null;
+        try {
+            response = emailValidatorClient.validate(email);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Email validation failed");
+        }
+        finally {
+            if (response != null && response.score() < 100)
+                throw new InvalidEmailAddressException("Invalid email address");
+        }
     }
 
     @Transactional

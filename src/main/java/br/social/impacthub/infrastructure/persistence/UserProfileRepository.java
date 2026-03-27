@@ -1,6 +1,5 @@
-package br.social.impacthub.repository;
+package br.social.impacthub.infrastructure.persistence;
 
-import br.social.impacthub.model.entity.UserCredentials;
 import br.social.impacthub.model.entity.UserProfile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

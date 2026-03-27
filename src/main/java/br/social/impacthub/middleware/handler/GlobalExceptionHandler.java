@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(
-                        StandardResponse.error(exception.getMessage())
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(
-                        StandardResponse.error(exception.getMessage())
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(
-                        StandardResponse.error(exception.getMessage())
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(
-                        StandardResponse.error(exception.getMessage())
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(
-                        StandardResponse.error(exception.getMessage())
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(
-                        StandardResponse.error(exception.getMessage())
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 
@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(
-                        StandardResponse.error(exception.getMessage())
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 
@@ -96,5 +96,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(StandardResponse.fail(errors));
+    }
+
+    @ExceptionHandler(InvalidEmailAddressException.class)
+    public ResponseEntity<StandardResponse<Void>> handleInvalidEmailAddressException(InvalidEmailAddressException exception){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
     }
 }

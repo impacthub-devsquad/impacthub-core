@@ -1,4 +1,4 @@
-package br.social.impacthub.controller;
+package br.social.impacthub.infrastructure.web;
 
 import br.social.impacthub.model.dto.PagedResponse;
 import br.social.impacthub.model.dto.StandardResponse;

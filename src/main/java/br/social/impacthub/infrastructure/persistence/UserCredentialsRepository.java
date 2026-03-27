@@ -1,8 +1,7 @@
-package br.social.impacthub.repository;
+package br.social.impacthub.infrastructure.persistence;
 
 import br.social.impacthub.model.entity.UserCredentials;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 import java.util.UUID;

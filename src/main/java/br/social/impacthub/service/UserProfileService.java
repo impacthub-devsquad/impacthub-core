@@ -7,7 +7,7 @@ import br.social.impacthub.model.dto.PagedResponse;
 import br.social.impacthub.model.dto.UpdateUserRequest;
 import br.social.impacthub.model.dto.UserProfileResponse;
 import br.social.impacthub.model.entity.UserProfile;
-import br.social.impacthub.repository.UserProfileRepository;
+import br.social.impacthub.infrastructure.persistence.UserProfileRepository;
 import br.social.impacthub.service.mapper.UserProfileMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
