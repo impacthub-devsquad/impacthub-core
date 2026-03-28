@@ -22,7 +22,7 @@ public class OngInvite {
     private Ong ong;
 
     @ManyToOne
-    @JoinColumn(name = "ong_participant_role")
+    @JoinColumn(name = "role_id")
     private OngParticipantRole role;
 
     @Column(name = "created_at")

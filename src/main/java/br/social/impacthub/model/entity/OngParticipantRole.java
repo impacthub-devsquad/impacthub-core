@@ -14,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OngParticipantRole {
-    @Id @Column(name = "role_id")
-    private Integer roleId;
+    @Id @Column(name = "id")
+    private Integer id;
 
     @NotNull
     private String name;
