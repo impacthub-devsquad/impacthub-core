@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity @Table(name = "user_profile")
@@ -24,4 +25,7 @@ public class UserProfile {
 
     @NotNull
     private String description;
+
+    @Column(name = "created_at")
+    private Instant createdAt;
 }
