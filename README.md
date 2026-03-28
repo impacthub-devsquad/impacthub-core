@@ -33,25 +33,6 @@ Projeto voluntário desenvolvido como proposta da comunidade DevSquad.
 - Docker & Docker compose
 
 
-## Count Lines of Code
-
-````bash
-src/
-
-66 text files.
-66 unique files.                              
-
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-Java                            61            321             11           1525
-YAML                             5             27              0            106
--------------------------------------------------------------------------------
-SUM:                            66            348             11           1631
--------------------------------------------------------------------------------
-
-````
-
 ## Features
 
 - [x] Autenticação
