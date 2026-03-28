@@ -17,7 +17,7 @@ public class Ong {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
     @Column(name = "ong_id")
-    private UUID ongId;
+    private UUID id;
 
     @NotNull
     private String name;
@@ -34,5 +34,5 @@ public class Ong {
 
     @ManyToOne
     @JoinColumn(name = "user_owner_id")
-    private UserProfile userProfile;
+    private UserProfile userOwner;
 }
