@@ -17,7 +17,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class OngCategory {
     @Id
-    @Column(name = "category_id")
+    @Column(name = "id")
     private Integer ongCategoryId;
 
     @NotNull
