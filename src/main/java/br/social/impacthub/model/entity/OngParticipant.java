@@ -22,7 +22,7 @@ public class OngParticipant {
     private UserProfile user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role")
+    @JoinColumn(name = "role_id")
     private OngParticipantRole role;
 
 }
