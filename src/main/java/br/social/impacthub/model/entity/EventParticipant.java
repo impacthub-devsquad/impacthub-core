@@ -6,13 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Entity
-@Table
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity @Table(name = "event_participant")
+@Data @AllArgsConstructor @NoArgsConstructor
 @IdClass(EventParticipantId.class)
-
 public class EventParticipant {
     @Id
     @ManyToOne

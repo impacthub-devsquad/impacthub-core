@@ -1,15 +1,11 @@
 package br.social.impacthub.model.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Data @AllArgsConstructor @NoArgsConstructor
-@EqualsAndHashCode
-public class OngParticipantId {
+public class OngFollowerId {
     private Ong ong;
     private UserProfile user;
 }
