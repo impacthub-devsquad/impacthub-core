@@ -69,11 +69,10 @@ public class OngParticipantController {
 
     @PostMapping("/{ongId}/invites/me/recuse")
     public ResponseEntity<StandardResponse<Void>> recuseInvite(
-            @PathVariable UUID ongId,
-            @PathVariable UUID userId
+            @PathVariable UUID ongId
     ){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongInviteService.recuse(ongId, userId, authenticatedUserId);
+        ongInviteService.recuse(ongId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
