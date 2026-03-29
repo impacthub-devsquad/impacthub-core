@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 public class OngInviteId {
-    private UserProfile user;
     private Ong ong;
+    private UserProfile user;
 }

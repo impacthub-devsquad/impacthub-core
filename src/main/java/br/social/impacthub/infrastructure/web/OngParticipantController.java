@@ -15,82 +15,22 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/ongs")
 public class OngParticipantController {
-    private OngParticipantService ongParticipantService;
-    private AuthService authService;
-    private OngInviteService ongInviteService;
+    private final AuthService authService;
+    private final OngInviteService ongInviteService;
 
-    public OngParticipantController(OngParticipantService ongParticipantService, AuthService authService) {
-        this.ongParticipantService = ongParticipantService;
+    public OngParticipantController(AuthService authService, OngInviteService ongInviteService) {
         this.authService = authService;
+        this.ongInviteService = ongInviteService;
     }
 
-    @GetMapping({"/{ongId}/participants"})
-    public ResponseEntity<StandardResponse<PagedResponse<OngParticipantResponse>>> getAllByOng(
+    @PostMapping("/{ongId}/invites")
+    public ResponseEntity<StandardResponse<Void>> inviteUser(
             @PathVariable UUID ongId,
-            Pageable pageable
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        StandardResponse.success(
-                            ongParticipantService.getAll(ongId, pageable)
-                        )
-                );
-    }
-
-    @GetMapping("/{ongId}/participants/{participantId}")
-    public ResponseEntity<StandardResponse<OngParticipantResponse>> getByParticipantId(
-            @PathVariable UUID ongId,
-            @PathVariable UUID userId
-    ){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        StandardResponse.success(
-                                ongParticipantService.getByUserId(ongId, userId)
-                        )
-                );
-    }
-
-    @DeleteMapping("/{ongId}/participants/me")
-    public ResponseEntity<StandardResponse<Void>> leaveParticipant(
-            @PathVariable UUID ongId
+            @Valid @RequestBody CreateOngInviteRequest request
     ){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
 
-        ongParticipantService.delete(ongId, authenticatedUserId, authenticatedUserId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        StandardResponse.success()
-                );
-    }
-
-    @DeleteMapping("/{ongId}/participants/{userId}")
-    public ResponseEntity<StandardResponse<Void>> removeParticipant(
-            @PathVariable UUID ongId,
-            @PathVariable UUID userId
-    ){
-        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-
-        ongParticipantService.delete(ongId, userId, authenticatedUserId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        StandardResponse.success()
-                );
-    }
-
-    @PostMapping("/{ongId}/participants/invites")
-    public ResponseEntity<StandardResponse<Void>> inviteParticipant(
-            @PathVariable UUID ongId,
-            @Valid @RequestBody CreateOngParticipantInviteRequest request
-    ){
-        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-
-        ongParticipantService.inviteParticipant(ongId, request.userId(), request.roleId(), authenticatedUserId);
+        ongInviteService.create(request, ongId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -99,15 +39,13 @@ public class OngParticipantController {
                 );
     }
 
-    @DeleteMapping("/{ongId}/invites/{userId}")
+    @PostMapping("/{ongId}/invites/{userId}")
     public ResponseEntity<StandardResponse<Void>> deleteInvite(
             @PathVariable UUID ongId,
             @PathVariable UUID userId
-            )
-    {
+    ){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-
-        ongParticipantService.deleteInvite(ongId, userId, authenticatedUserId);
+        ongInviteService.delete(userId, ongId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -116,13 +54,12 @@ public class OngParticipantController {
                 );
     }
 
-    @PostMapping("/{ongId}/invites/{inviteId}/accept")
+    @PostMapping("/{ongId}/invites/me/accept")
     public ResponseEntity<StandardResponse<Void>> acceptInvite(
-            @PathVariable UUID ongId,
-            @PathVariable UUID inviteId
+            @PathVariable UUID ongId
     ){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongInviteService.accept(inviteId, authenticatedUserId);
+        ongInviteService.accept(ongId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -131,13 +68,12 @@ public class OngParticipantController {
                 );
     }
 
-    @PostMapping("/{ongId}/invites/{inviteId}/recuse")
+    @PostMapping("/{ongId}/invites/me/recuse")
     public ResponseEntity<StandardResponse<Void>> recuseInvite(
-            @PathVariable UUID ongId,
-            @PathVariable UUID inviteId
+            @PathVariable UUID ongId
     ){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongInviteService.recuse(inviteId, authenticatedUserId);
+        ongInviteService.recuse(ongId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
