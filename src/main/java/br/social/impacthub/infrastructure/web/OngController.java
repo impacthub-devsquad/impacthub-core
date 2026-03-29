@@ -61,6 +61,20 @@ public class OngController {
                 );
     }
 
+    @PatchMapping("/{ongId}")
+    public ResponseEntity<StandardResponse<OngResponse>> update(@Valid @RequestBody UpdateOngRequest request){
+        UUID userId = authService.getAuthenticatedUser().userId();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        StandardResponse.success(
+                                ongService.update(request, userId)
+                        )
+                );
+    }
+
+
     @DeleteMapping("/{ongId}")
     public ResponseEntity<StandardResponse<Void>> delete(@PathVariable UUID ongId){
         UUID userId = authService.getAuthenticatedUser().userId();
@@ -73,7 +87,6 @@ public class OngController {
                         StandardResponse.success()
                 );
     }
-
 
     @PostMapping("/{ongId}/followers/me")
     public ResponseEntity<StandardResponse<Void>> followOng(@PathVariable UUID ongId){
