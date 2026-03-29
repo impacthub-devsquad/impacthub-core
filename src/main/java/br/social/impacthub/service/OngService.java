@@ -3,6 +3,7 @@ package br.social.impacthub.service;
 import br.social.impacthub.model.dto.CreateOngRequest;
 import br.social.impacthub.model.dto.OngResponse;
 import br.social.impacthub.model.dto.PagedResponse;
+import br.social.impacthub.model.dto.UpdateOngRequest;
 import br.social.impacthub.service.mapper.OngMapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +39,9 @@ public class OngService {
     }
 
     public void unfollowOng(UUID authenticatedUserId, UUID ongId) {
+    }
+
+    public OngResponse update(@Valid UpdateOngRequest request, UUID userId) {
+        return null;
     }
 }
