@@ -61,72 +61,25 @@ public class OngController {
                 );
     }
 
+    @PatchMapping("/{ongId}")
+    public ResponseEntity<StandardResponse<OngResponse>> update(@Valid @RequestBody UpdateOngRequest request){
+        UUID userId = authService.getAuthenticatedUser().userId();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        StandardResponse.success(
+                                ongService.update(request, userId)
+                        )
+                );
+    }
+
+
     @DeleteMapping("/{ongId}")
     public ResponseEntity<StandardResponse<Void>> delete(@PathVariable UUID ongId){
         UUID userId = authService.getAuthenticatedUser().userId();
 
         ongService.delete(ongId, userId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        StandardResponse.success()
-                );
-    }
-
-    @PostMapping("/{ongId}/invites")
-    public ResponseEntity<StandardResponse<Void>> inviteUser(
-            @PathVariable UUID ongId,
-            @Valid @RequestBody CreateOngInviteRequest request
-    ){
-        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-
-        ongInviteService.create(request, ongId, authenticatedUserId);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(
-                        StandardResponse.success()
-                );
-    }
-
-    @PostMapping("/{ongId}/invites/{inviteId}")
-    public ResponseEntity<StandardResponse<Void>> delete(
-            @PathVariable UUID ongId,
-            @PathVariable UUID inviteId
-    ){
-        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongInviteService.delete(inviteId, authenticatedUserId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        StandardResponse.success()
-                );
-    }
-
-    @PostMapping("/{ongId}/invites/{inviteId}/accept")
-    public ResponseEntity<StandardResponse<Void>> acceptInvite(
-            @PathVariable UUID ongId,
-            @PathVariable UUID inviteId
-    ){
-        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongInviteService.accept(inviteId, authenticatedUserId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                        StandardResponse.success()
-                );
-    }
-
-    @PostMapping("/{ongId}/invites/{inviteId}/recuse")
-    public ResponseEntity<StandardResponse<Void>> recuseInvite(
-            @PathVariable UUID ongId,
-            @PathVariable UUID inviteId
-    ){
-        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongInviteService.recuse(inviteId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
