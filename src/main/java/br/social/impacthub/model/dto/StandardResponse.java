@@ -24,6 +24,10 @@ public record StandardResponse<T> (
         return new StandardResponse<>("fail", data, null);
     }
 
+    public static <T> StandardResponse<T> fail(String message, T data){
+        return new StandardResponse<>("fail", data, message);
+    }
+
     public static StandardResponse<Void> error(String message){
         return new StandardResponse<>("error", null, message);
     }

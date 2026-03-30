@@ -97,7 +97,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(StandardResponse.fail(errors));
+                .body(StandardResponse.fail("Malformed data", errors));
     }
 
     @ExceptionHandler(InvalidEmailAddressException.class)

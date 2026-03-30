@@ -1,5 +1,6 @@
 package br.social.impacthub.infrastructure.web;
 
+import br.social.impacthub.infrastructure.web.docs.AuthControllerDocs;
 import br.social.impacthub.model.dto.*;
 import br.social.impacthub.service.security.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
     private AuthService authService;
 
     public AuthController(AuthService authService) {
@@ -40,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody RefreshRequest request) {
+    public ResponseEntity<LoginResponse> refresh(@Valid @RequestBody RefreshRequest request) {
         LoginResponse response = authService.refresh(request);
 
         return ResponseEntity
