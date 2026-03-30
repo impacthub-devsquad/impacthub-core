@@ -9,7 +9,7 @@ target/
 GEMINI.md
 COPILOT.md
 CLAUDE.md
-
+.agent
 
 ### STS ###
 .apt_generated
