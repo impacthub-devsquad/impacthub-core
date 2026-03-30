@@ -2,6 +2,8 @@ package br.social.impacthub.middleware.handler;
 
 import br.social.impacthub.exception.*;
 import br.social.impacthub.model.dto.StandardResponse;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -102,6 +104,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<StandardResponse<Void>> handleInvalidEmailAddressException(InvalidEmailAddressException exception){
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<StandardResponse<Void>> handleEntityNotFound(EntityNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(
                         StandardResponse.fail(exception.getMessage())
                 );
