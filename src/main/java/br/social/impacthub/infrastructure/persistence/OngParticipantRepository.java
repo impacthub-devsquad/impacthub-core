@@ -14,28 +14,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OngParticipantRepository extends JpaRepository<OngParticipant, OngParticipantId> {
-    Page<OngParticipant> findAllByOngId(
-            @Param("ongId") UUID ongId,
-            Pageable pageable
-    );
-
-    @Query("""
-        SELECT p FROM OngParticipant p
-        WHERE p.ong.id = :ongId AND p.user.userId = :userId
-    """)
-    Optional<OngParticipant> findByOngIdAndUserId(
-            @Param("ongId") UUID ongId,
-            @Param("userId") UUID userId
-    );
-
-    @Transactional
-    @Modifying
-    @Query("""
-        DELETE FROM OngParticipant p
-        WHERE p.ong.id = :ongId AND p.user.userId = :userId
-    """)
-    void deleteByOngIdAndUserId(
-            @Param("ongId") UUID ongId,
-            @Param("userId") UUID userId
-    );
+    Page<OngParticipant> findAllByOngId(UUID ongId, Pageable pageable);
 }

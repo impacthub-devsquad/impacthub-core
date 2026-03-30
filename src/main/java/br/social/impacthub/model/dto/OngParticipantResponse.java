@@ -6,8 +6,7 @@ public record OngParticipantResponse(
         UUID userId,
         String userName,
         String userEmail,
-        Integer roleId,
-        String roleName
+        String role
 ) {
 }
 

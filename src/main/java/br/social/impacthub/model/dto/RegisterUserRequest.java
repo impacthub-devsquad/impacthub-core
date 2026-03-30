@@ -6,8 +6,8 @@ import org.hibernate.validator.constraints.Length;
 
 public record RegisterUserRequest(
         @NotBlank String username,
-        @Email String email,
-        @NotBlank @Length(min = 8, max = 50) String password
+        @Email(message = "Must be a well-formed email address") String email,
+        @NotBlank @Length(min = 8, max = 50, message = "Length must be between 8 and 50") String password
 )
 {
 }
