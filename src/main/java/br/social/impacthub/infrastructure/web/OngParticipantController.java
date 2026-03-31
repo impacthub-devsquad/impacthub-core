@@ -1,5 +1,6 @@
 package br.social.impacthub.infrastructure.web;
 
+import br.social.impacthub.infrastructure.web.docs.OngParticipantControllerDocs;
 import br.social.impacthub.model.dto.*;
 import br.social.impacthub.service.OngInviteService;
 import br.social.impacthub.service.OngParticipantService;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/ongs")
-public class OngParticipantController {
+public class OngParticipantController implements OngParticipantControllerDocs {
     private final AuthService authService;
     private final OngInviteService ongInviteService;
     private final OngParticipantService ongParticipantService;
@@ -117,7 +118,7 @@ public class OngParticipantController {
     }
 
     @DeleteMapping("/{ongId}/participants/me")
-    public ResponseEntity<StandardResponse<Void>> deleteParticipant(
+    public ResponseEntity<StandardResponse<Void>> leaveParticipant(
             @PathVariable UUID ongId
     ){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
