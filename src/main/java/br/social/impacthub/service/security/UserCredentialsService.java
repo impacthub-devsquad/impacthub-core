@@ -78,6 +78,9 @@ public class UserCredentialsService implements UserDetailsService {
     }
 
     public void deleteById(UUID userID) {
+        if (!userCredentialsRepository.existsById(userID)) {
+            throw new UserNotExistsException();
+        }
         userCredentialsRepository.deleteById(userID);
     }
 
