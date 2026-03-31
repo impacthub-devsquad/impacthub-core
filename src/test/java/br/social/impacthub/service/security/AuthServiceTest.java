@@ -11,21 +11,18 @@ import br.social.impacthub.model.dto.LoginResponse;
 import br.social.impacthub.model.dto.RefreshRequest;
 import br.social.impacthub.model.dto.RegisterUserRequest;
 import br.social.impacthub.model.dto.UserCredentialsResponse;
+import br.social.impacthub.model.dto.security.AuthenticatedUser;
 import br.social.impacthub.model.entity.UserCredentials;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -222,7 +219,6 @@ public class AuthServiceTest {
     @Test
     @DisplayName("Should get authenticated user from SecurityContext successfully")
     public void getAuthenticatedUserTestCase1(){
-        // Given
         UUID userId = UUID.randomUUID();
         UserCredentials userCredentials = new UserCredentials(
                 userId, 
@@ -232,21 +228,27 @@ public class AuthServiceTest {
                 null,
                 null
         );
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userCredentials, null, userCredentials.getAuthorities());
-        
-        Mockito.mockStatic(SecurityContextHolder.class);
-        var securityContext = Mockito.mock(org.springframework.security.core.context.SecurityContext.class);
-        Mockito.when(SecurityContextHolder.getContext()).thenReturn(securityContext);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        
-        // When
-        var result = authService.getAuthenticatedUser();
-        
-        // Then
-        assertNotNull(result);
-        assertEquals(userId, result.userId());
-        assertEquals("testuser", result.username());
-        assertEquals("test@email.com", result.email());
+
+        try(MockedStatic<SecurityContextHolder> mock = Mockito.mockStatic(SecurityContextHolder.class)) {
+            SecurityContext context = Mockito.mock(SecurityContext.class);
+            Authentication auth = Mockito.mock(Authentication.class);
+
+            mock.when(SecurityContextHolder::getContext)
+                    .thenReturn(context);
+
+            Mockito.when(context.getAuthentication())
+                    .thenReturn(auth);
+
+            Mockito.when(auth.getPrincipal())
+                    .thenReturn(userCredentials);
+
+            AuthenticatedUser result = authService.getAuthenticatedUser();
+
+            assertNotNull(result);
+            assertEquals(userId, result.userId());
+            assertEquals("testuser", result.username());
+            assertEquals("test@email.com", result.email());
+        }
     }
 
     @Test
