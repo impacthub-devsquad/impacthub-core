@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ImpactHubApplicationTests {
+class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
