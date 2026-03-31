@@ -22,5 +22,5 @@ spring:
         web-allow-others: true
 
 token:
-  issuer: "${TOKEN_ISSUER:default_issuer}"
-  secret: "${TOKEN_SECRET:default_secret}"
+  issuer: ${TOKEN_ISSUER:default_issuer}
+  secret: ${TOKEN_SECRET:default_secret}
