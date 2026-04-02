@@ -48,7 +48,7 @@ public class OngParticipantService {
             UUID ongId,
             Pageable pageable
     ) {
-        Page<OngParticipant> page = ongParticipantRepository.findAllByOngId(ongId, pageable);
+        Page<OngParticipant> page = ongParticipantRepository.findAllByOng_ongId(ongId, pageable);
 
         return PagedResponse.<OngParticipantResponse>builder()
                 .page(page.getNumber())
@@ -161,5 +161,13 @@ public class OngParticipantService {
                 .map(roleValue -> roleValue.getName())
                 .toList();
         return allowedRoles.contains(roleName);
+    }
+
+    public OngParticipantResponse getById(UUID ongId, UUID participantId) {
+        OngParticipant ongParticipant = ongParticipantRepository.findById(
+                new OngParticipantId(ongRepository.getReferenceById(ongId), userProfileRepository.getReferenceById(participantId))
+        ).orElseThrow(() -> new UserNotExistsException("Participant not found"));
+
+        return ongParticipantMapper.toResponse(ongParticipant);
     }
 }

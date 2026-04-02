@@ -17,7 +17,7 @@ public class Ong {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
     @Column(name = "ong_id")
-    private UUID id;
+    private UUID ongId;
 
     @NotNull
     private String name;

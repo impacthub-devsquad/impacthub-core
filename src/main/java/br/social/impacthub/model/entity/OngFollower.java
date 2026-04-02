@@ -1,12 +1,14 @@
 package br.social.impacthub.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity @Table(name = "ong_follower")
 @IdClass(OngFollowerId.class)
+@Data
 public class OngFollower {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

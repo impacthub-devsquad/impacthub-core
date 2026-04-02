@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class OngInviteMapper {
     public OngInviteResponse toResponse(OngInvite ongInvite){
         return new OngInviteResponse(
-                ongInvite.getOng().getId(),
+                ongInvite.getOng().getOngId(),
                 ongInvite.getUser().getUserId(),
                 ongInvite.getRole().getName(),
                 ongInvite.getCreatedAt()

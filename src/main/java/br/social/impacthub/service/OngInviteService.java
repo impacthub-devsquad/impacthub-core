@@ -53,7 +53,7 @@ public class OngInviteService {
         if (!canUserManageOngInvites(role))
             throw new ForbiddenOperationException("Authenticated user hasn't permission to access this resource");
 
-        Page<OngInvite> page = ongInviteRepository.findAllByOngId(ongId, pageable);
+        Page<OngInvite> page = ongInviteRepository.findAllByOng_OngId(ongId, pageable);
 
         return new PagedResponse<OngInviteResponse>(
                 page.getNumber(),

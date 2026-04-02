@@ -14,5 +14,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OngParticipantRepository extends JpaRepository<OngParticipant, OngParticipantId> {
-    Page<OngParticipant> findAllByOngId(UUID ongId, Pageable pageable);
+    Page<OngParticipant> findAllByOng_ongId(UUID ongId, Pageable pageable);
 }

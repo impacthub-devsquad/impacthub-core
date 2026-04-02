@@ -146,4 +146,17 @@ public class OngParticipantController implements OngParticipantControllerDocs {
                         StandardResponse.success()
                 );
     }
+
+    @GetMapping("/{ongId}/participants/{participantId}")
+    public ResponseEntity<StandardResponse<OngParticipantResponse>> getParticipant(
+            @PathVariable UUID ongId,
+            @PathVariable UUID participantId
+    ){
+        OngParticipantResponse response = ongParticipantService.getById(ongId, participantId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        StandardResponse.success(response)
+                );
+    }
 }
