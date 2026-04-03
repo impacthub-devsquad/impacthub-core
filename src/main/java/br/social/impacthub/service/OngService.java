@@ -1,45 +1,49 @@
 package br.social.impacthub.service;
 
-import br.social.impacthub.exception.ForbiddenOperationException;
-import br.social.impacthub.exception.OngNotFoundException;
-import br.social.impacthub.infrastructure.persistence.OngFollowerRepository;
-import br.social.impacthub.infrastructure.persistence.OngRepository;
-import br.social.impacthub.infrastructure.persistence.UserProfileRepository;
-import br.social.impacthub.model.dto.OngResponse;
-import br.social.impacthub.model.dto.PagedResponse;
-import br.social.impacthub.model.dto.UpdateOngRequest;
-import br.social.impacthub.model.entity.Ong;
-import br.social.impacthub.model.entity.OngFollower;
-import br.social.impacthub.model.entity.OngFollowerId;
+import br.social.impacthub.exception.*;
+import br.social.impacthub.infrastructure.persistence.*;
+import br.social.impacthub.model.dto.*;
+import br.social.impacthub.model.entity.*;
 import br.social.impacthub.service.mapper.OngMapper;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
 public class OngService {
-    private OngMapper ongMapper;
-    private OngRepository ongRepository;
-    private UserProfileRepository userProfileRepository;
-    private OngFollowerRepository ongFollowerRepository;
+    private final OngMapper ongMapper;
+    private final OngRepository ongRepository;
+    private final UserProfileRepository userProfileRepository;
+    private final OngFollowerRepository ongFollowerRepository;
+    private final OngCategoryRepository ongCategoryRepository;
+    private final OngParticipantRepository ongParticipantRepository;
+    private final OngParticipantRoleRepository ongParticipantRoleRepository;
 
-    public OngService(OngMapper ongMapper, OngRepository ongRepository, UserProfileRepository userProfileRepository, OngFollowerRepository ongFollowerRepository) {
+    public OngService(
+            OngMapper ongMapper,
+            OngRepository ongRepository,
+            UserProfileRepository userProfileRepository,
+            OngFollowerRepository ongFollowerRepository,
+            OngCategoryRepository ongCategoryRepository,
+            OngParticipantRepository ongParticipantRepository, OngParticipantRoleRepository ongParticipantRoleRepository) {
         this.ongMapper = ongMapper;
         this.ongRepository = ongRepository;
         this.userProfileRepository = userProfileRepository;
         this.ongFollowerRepository = ongFollowerRepository;
+        this.ongCategoryRepository = ongCategoryRepository;
+        this.ongParticipantRepository = ongParticipantRepository;
+        this.ongParticipantRoleRepository = ongParticipantRoleRepository;
     }
 
-    public PagedResponse<OngResponse> getAll(Pageable pageable)
-    {
-        Page<Ong> ongPage = ongRepository.findAll(pageable);
+    public PagedResponse<OngSummaryResponse> getAll(UUID authenticatedUserId, Pageable pageable){
+        Page<OngSummary> ongPage = ongRepository.findAllOngSummary(authenticatedUserId, pageable);
 
-        return PagedResponse.<OngResponse>builder()
+        return PagedResponse.<OngSummaryResponse>builder()
                 .page(ongPage.getNumber())
                 .size(ongPage.getSize())
                 .totalPages(ongPage.getTotalPages())
@@ -52,29 +56,59 @@ public class OngService {
                 .build();
     }
 
-    public OngResponse getById(UUID ongId) {
+    public OngSummaryResponse getById(UUID ongId, UUID authenticatedUserId) {
         return ongMapper.toResponse(
-                ongRepository.findById(ongId)
-                        .orElseThrow(() -> new EntityNotFoundException("ONG não encontrada com ID: " + ongId))
+                ongRepository.findOngSummaryById(ongId, authenticatedUserId)
+                        .orElseThrow(() -> new OngNotFoundException("ONG not found with ID: " + ongId))
         );
     }
 
-    public OngResponse create(UUID ongId, String name, String title , String description) {
-          return ongMapper.toResponse(
-                  ongRepository.save(
-                          new Ong(
-                            ongId,
-                            name,
-                            title,
-                            description,
-                            null,
-                            null
-                          )
-                  )
-          );
+    @Transactional
+    public OngSummaryResponse create(CreateOngRequest request, UUID authenticatedUserId) {
+        if (ongRepository.existsByName(request.name()))
+            throw new OngAlreadyExistsException("An ONG with this name already exists") ;
+
+        UserProfile userOwner = userProfileRepository.getReferenceById(authenticatedUserId);
+
+        Ong ong = registerNewOng(request, userOwner);
+
+        registerOngOwnerParticipant(userOwner, ong);
+
+        return ongMapper.toResponse(
+                ongRepository.findOngSummaryById(ong.getId(), authenticatedUserId)
+                    .orElseThrow(() -> new OngNotFoundException("ONG not found with ID: " + ong.getId()))
+        );
     }
 
-    @Transactional
+    private Ong registerNewOng(CreateOngRequest request, UserProfile userOwner){
+        Ong newOng = new Ong();
+        newOng.setName(request.name());
+        newOng.setTitle(request.title());
+        newOng.setDescription(request.description());
+        newOng.setCategory(
+                ongCategoryRepository.getReferenceById(
+                        OngCategory.Values.getIdByName(request.category())
+                )
+        );
+        newOng.setUserOwner(userOwner);
+        newOng.setCreatedAt(Instant.now());
+
+        return ongRepository.save(newOng);
+    }
+
+    private void registerOngOwnerParticipant(UserProfile ongOwner, Ong ong){
+        OngParticipant userOwnerParticipant = new OngParticipant();
+        userOwnerParticipant.setOng(ong);
+        userOwnerParticipant.setUser(ongOwner);
+        userOwnerParticipant.setUser(ongOwner);
+        userOwnerParticipant.setCreatedAt(Instant.now());
+        userOwnerParticipant.setRole(
+                new OngParticipantRole(OngParticipantRole.Value.OWNER.getId(), OngParticipantRole.Value.OWNER.getName())
+        );
+
+        ongParticipantRepository.save(userOwnerParticipant);
+    }
+
     public void delete(UUID ongId, UUID authenticatedUserID) {
         Ong ong = ongRepository.findById(ongId)
                 .orElseThrow(() -> new OngNotFoundException());
@@ -86,31 +120,32 @@ public class OngService {
         ongRepository.delete(ong);
     }
 
-    public void followOng(UUID authenticatedUserId, UUID ongId) {
+    public void followOng(UUID ongId, UUID authenticatedUserId) {
         Ong ong = ongRepository.findById(ongId)
                 .orElseThrow(() -> new OngNotFoundException());
 
         OngFollowerId followerId = new OngFollowerId(ong, userProfileRepository.getReferenceById(authenticatedUserId));
 
         if (ongFollowerRepository.existsById(followerId)) {
-            throw new ForbiddenOperationException("User is already following this ONG");
+            throw new UserAlreadyFollowingONG("User is already following this ONG");
         }
 
         OngFollower follower = new OngFollower();
         follower.setOng(ong);
         follower.setUser(userProfileRepository.getReferenceById(authenticatedUserId));
+        follower.setCreatedAt(Instant.now());
 
         ongFollowerRepository.save(follower);
     }
 
-    public void unfollowOng(UUID authenticatedUserId, UUID ongId) {
+    public void unfollowOng(UUID ongId, UUID authenticatedUserId) {
         Ong ong = ongRepository.findById(ongId)
                 .orElseThrow(() -> new OngNotFoundException());
 
         OngFollowerId followerId = new OngFollowerId(ong, userProfileRepository.getReferenceById(authenticatedUserId));
 
         if (!ongFollowerRepository.existsById(followerId)) {
-            throw new ForbiddenOperationException("User is not following this ONG");
+            throw new UserNotFollowingONG("User is not following this ONG");
         }
 
         ongFollowerRepository.deleteById(followerId);
@@ -134,6 +169,8 @@ public class OngService {
             ong.setDescription(request.description().get());
         }
 
-        return ongMapper.toResponse(ongRepository.save(ong));
+        Ong savedOng = ongRepository.save(ong);
+
+        return ongMapper.toResponse(savedOng);
     }
 }

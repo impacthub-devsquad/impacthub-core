@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public record CreateOngInviteRequest(
         @NotNull UUID userID,
-        @Pattern(regexp = "adm|mod") String role
+        @Pattern(regexp = "adm|mod", message = "must match 'adm|mod'") String role
 ) {
 }

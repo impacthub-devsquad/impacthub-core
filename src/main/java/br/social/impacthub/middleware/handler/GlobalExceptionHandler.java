@@ -2,7 +2,7 @@ package br.social.impacthub.middleware.handler;
 
 import br.social.impacthub.exception.*;
 import br.social.impacthub.model.dto.StandardResponse;
-import jakarta.persistence.Entity;
+import br.social.impacthub.model.entity.OngCategory;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
@@ -115,6 +117,77 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(
                         StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(OngAlreadyExistsException.class)
+    public ResponseEntity<StandardResponse<Void>> handleOngAlreadyExists(OngAlreadyExistsException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(UserAlreadyFollowingONG.class)
+    public ResponseEntity<StandardResponse<Void>> handleUserAlreadyFollowingONG(UserAlreadyFollowingONG exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(UserAlreadyInvitedToONG.class)
+    public ResponseEntity<StandardResponse<Void>> handleUserAlreadyInvitedToONG(UserAlreadyInvitedToONG exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(UserNotFollowingONG.class)
+    public ResponseEntity<StandardResponse<Void>> handleUserNotFollowingONG(UserNotFollowingONG exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(OngNotFoundException.class)
+    public ResponseEntity<StandardResponse<Void>> handleOngNotFound(OngNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(OngInviteNotFoundException.class)
+    public ResponseEntity<StandardResponse<Void>> handleOngInviteNotFound(OngInviteNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(InvalidOngCategoryException.class)
+    public ResponseEntity<StandardResponse<Map<String, List<String>>>> handleInvalidOngCategory(InvalidOngCategoryException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(
+                                exception.getMessage(),
+                                Map.of(
+                                        "valid categories",
+                                        Arrays.stream(OngCategory.Values.values())
+                                                .map(category -> category.name)
+                                                .toList()
+                                )
+                        )
                 );
     }
 }
