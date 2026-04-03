@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface OngInviteRepository extends JpaRepository<OngInvite, OngInviteId> {
-    Page<OngInvite> findAllByOng_OngId(UUID ongId, Pageable pageable);
+    Page<OngInvite> findAllByOng_Id(UUID ongId, Pageable pageable);
 }

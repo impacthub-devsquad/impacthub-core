@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,4 +32,10 @@ public class Event {
     @JoinColumn(name = "ong_id")
     private Ong ong;
 
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private UserProfile createdBy;
 }

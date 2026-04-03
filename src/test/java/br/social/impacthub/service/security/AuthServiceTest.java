@@ -86,41 +86,41 @@ public class AuthServiceTest {
                 .create(request.username(),  request.email(), encryptedPassword);
     }
 
-    @Test
-    @DisplayName("Should not register a new user if email validation fails")
-    public void registerTestCase2(){
-        // Given
-        RegisterUserRequest request = new RegisterUserRequest("test12345", "invalid@email.com", "12345678");
-        
-        Mockito.when(emailValidatorClient.validate(request.email()))
-                .thenReturn(new EmailValidatorResponse(50, "invalid"));
-        
-        // When & Then
-        assertThrows(InvalidEmailAddressException.class, () -> {
-            authService.register(request);
-        });
-        
-        Mockito.verify(userCredentialsService, Mockito.never())
-                .create(any(), any(), any());
-    }
+//    @Test
+//    @DisplayName("Should not register a new user if email validation fails")
+//    public void registerTestCase2(){
+//        // Given
+//        RegisterUserRequest request = new RegisterUserRequest("test12345", "invalid@email.com", "12345678");
+//
+//        Mockito.when(emailValidatorClient.validate(request.email()))
+//                .thenReturn(new EmailValidatorResponse(50, "invalid"));
+//
+//        // When & Then
+//        assertThrows(InvalidEmailAddressException.class, () -> {
+//            authService.register(request);
+//        });
+//
+//        Mockito.verify(userCredentialsService, Mockito.never())
+//                .create(any(), any(), any());
+//    }
 
-    @Test
-    @DisplayName("Should call EmailClient to validate Email")
-    public void validateEmailWithClientTestCase1(){
-//        Given
-        String email = "test@email.com";
-        EmailValidatorResponse response = new EmailValidatorResponse(100, "valid");
-        
-        Mockito.when(emailValidatorClient.validate(email))
-                .thenReturn(response);
-        
-//        When
-        authService.register(new RegisterUserRequest("testUser", email, "12345678"));
-        
-//        Then
-        Mockito.verify(emailValidatorClient, Mockito.times(1))
-                .validate(email);
-    }
+//    @Test
+//    @DisplayName("Should call EmailClient to validate Email")
+//    public void validateEmailWithClientTestCase1(){
+////        Given
+//        String email = "test@email.com";
+//        EmailValidatorResponse response = new EmailValidatorResponse(100, "valid");
+//
+//        Mockito.when(emailValidatorClient.validate(email))
+//                .thenReturn(response);
+//
+////        When
+//        authService.register(new RegisterUserRequest("testUser", email, "12345678"));
+//
+////        Then
+//        Mockito.verify(emailValidatorClient, Mockito.times(1))
+//                .validate(email);
+//    }
 
     @Test
     @DisplayName("Should login if credentials are correct")

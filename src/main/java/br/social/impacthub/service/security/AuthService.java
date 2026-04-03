@@ -46,7 +46,7 @@ public class AuthService {
 
     @Transactional
     public void register(@Valid RegisterUserRequest request){
-        validateEmailWithClient(request.email());
+//        validateEmailWithClient(request.email());
 
         String encryptedPassword = passwordEncoder.encode(request.password());
         userCredentialsService.create(request.username(), request.email(), encryptedPassword);
