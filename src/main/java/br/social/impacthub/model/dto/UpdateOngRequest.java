@@ -5,6 +5,7 @@ import java.util.Optional;
 public record UpdateOngRequest(
         Optional <String> name,
         Optional <String> description,
-        Optional <String> title)
+        Optional <String> title
+)
 {
 }

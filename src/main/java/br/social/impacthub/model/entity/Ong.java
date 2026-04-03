@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +21,7 @@ public class Ong {
     private UUID id;
 
     @NotNull
+    @Column(unique = true)
     private String name;
 
     @NotNull
@@ -35,4 +37,7 @@ public class Ong {
     @ManyToOne
     @JoinColumn(name = "user_owner_id")
     private UserProfile userOwner;
+
+    @Column(name = "created_at")
+    private Instant createdAt;
 }

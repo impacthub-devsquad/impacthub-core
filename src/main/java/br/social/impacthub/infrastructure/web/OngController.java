@@ -1,7 +1,7 @@
 package br.social.impacthub.infrastructure.web;
 
+import br.social.impacthub.infrastructure.web.docs.OngControllerDocs;
 import br.social.impacthub.model.dto.*;
-import br.social.impacthub.service.OngInviteService;
 import br.social.impacthub.service.OngService;
 import br.social.impacthub.service.security.AuthService;
 import jakarta.validation.Valid;
@@ -14,66 +14,72 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/ongs")
-public class OngController {
-    private OngInviteService ongInviteService;
-    private OngService ongService;
-    private AuthService authService;
+public class OngController implements OngControllerDocs {
+    private final OngService ongService;
+    private final AuthService authService;
 
-    public OngController(OngInviteService ongInviteService, OngService ongService, AuthService authService) {
-        this.ongInviteService = ongInviteService;
+    public OngController(OngService ongService, AuthService authService) {
         this.ongService = ongService;
         this.authService = authService;
     }
 
     @GetMapping
-    public ResponseEntity<StandardResponse<PagedResponse<OngResponse>>> getAll(Pageable pageable){
+    public ResponseEntity<StandardResponse<PagedResponse<OngSummaryResponse>>> getAll(Pageable pageable){
+        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         StandardResponse.success(
-                            ongService.getAll(pageable)
+                            ongService.getAll(authenticatedUserId, pageable)
                         )
                 );
     }
 
     @GetMapping("/{ongId}")
-    public ResponseEntity<StandardResponse<OngResponse>> getByID(@PathVariable UUID ongId){
+    public ResponseEntity<StandardResponse<OngSummaryResponse>> getByID(
+            @PathVariable UUID ongId
+    ){
+        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         StandardResponse.success(
-                                ongService.getById(ongId)
+                                ongService.getById(ongId, authenticatedUserId)
                         )
                 );
     }
 
-
     @PostMapping
-    public ResponseEntity<StandardResponse<OngResponse>> create(@Valid @RequestBody CreateOngRequest request){
-        UUID userId = authService.getAuthenticatedUser().userId();
-
+    public ResponseEntity<StandardResponse<OngSummaryResponse>> create(
+            @Valid @RequestBody CreateOngRequest request
+    ){
+        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
                         StandardResponse.success(
-                                ongService.create(request, userId)
+                                ongService.create(request, authenticatedUserId)
                         )
                 );
     }
 
     @PatchMapping("/{ongId}")
-    public ResponseEntity<StandardResponse<OngResponse>> update(@Valid @RequestBody UpdateOngRequest request){
+    public ResponseEntity<StandardResponse<OngResponse>> update(
+            @PathVariable UUID ongId,
+            @Valid @RequestBody UpdateOngRequest request
+    ){
         UUID userId = authService.getAuthenticatedUser().userId();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         StandardResponse.success(
-                                ongService.update(request, userId)
+                                ongService.update(ongId, request, userId)
                         )
                 );
     }
-
 
     @DeleteMapping("/{ongId}")
     public ResponseEntity<StandardResponse<Void>> delete(@PathVariable UUID ongId){
@@ -91,7 +97,7 @@ public class OngController {
     @PostMapping("/{ongId}/followers/me")
     public ResponseEntity<StandardResponse<Void>> followOng(@PathVariable UUID ongId){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongService.followOng(authenticatedUserId, ongId);
+        ongService.followOng(ongId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -103,7 +109,7 @@ public class OngController {
     @DeleteMapping("/{ongId}/followers/me")
     public ResponseEntity<StandardResponse<Void>> unfollowOng(@PathVariable UUID ongId){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
-        ongService.unfollowOng(authenticatedUserId, ongId);
+        ongService.unfollowOng(ongId, authenticatedUserId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -1,25 +1,29 @@
 package br.social.impacthub.infrastructure.persistence;
 
-import br.social.impacthub.model.dto.OngResponse;
 import br.social.impacthub.model.dto.OngSummary;
 import br.social.impacthub.model.entity.Ong;
-import br.social.impacthub.model.entity.OngParticipant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface OngRepository extends JpaRepository<Ong, UUID> {
+    boolean existsByName(String name);
+
     @Query(value =
     """
     SELECT
         o.id as id,
         o.userOwner.userId as userOwnerId,
         o.name as name,
+        o.title as title,
         o.description as description,
+        o.category as category,
+        o.createdAt as createdAt,
         (
             SELECT COUNT(p)
             FROM OngParticipant p
@@ -58,7 +62,7 @@ public interface OngRepository extends JpaRepository<Ong, UUID> {
     WHERE o.id = :ongId 
     """
     )
-    OngSummary getOngSummaryById(
+    Optional<OngSummary> findOngSummaryById(
             @Param("ongId") UUID ongId,
             @Param("userId") UUID currentUserId
     );
@@ -69,7 +73,10 @@ public interface OngRepository extends JpaRepository<Ong, UUID> {
                 o.id as id,
                 o.userOwner.userId as userOwnerId,
                 o.name as name,
+                o.title as title,
                 o.description as description,
+                o.category as category,
+                o.createdAt as createdAt,
                 (
                     SELECT COUNT(p)
                     FROM OngParticipant p
@@ -107,7 +114,7 @@ public interface OngRepository extends JpaRepository<Ong, UUID> {
             FROM Ong o
             """
     )
-    Page<OngSummary> getAllOngSummary(
+    Page<OngSummary> findAllOngSummary(
             @Param("userId") UUID currentUserId,
             Pageable pageable
     );

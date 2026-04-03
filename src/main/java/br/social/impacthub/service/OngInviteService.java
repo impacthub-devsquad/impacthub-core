@@ -53,7 +53,7 @@ public class OngInviteService {
         if (!canUserManageOngInvites(role))
             throw new ForbiddenOperationException("Authenticated user hasn't permission to access this resource");
 
-        Page<OngInvite> page = ongInviteRepository.findAllByOngId(ongId, pageable);
+        Page<OngInvite> page = ongInviteRepository.findAllByOng_Id(ongId, pageable);
 
         return new PagedResponse<OngInviteResponse>(
                 page.getNumber(),
@@ -69,8 +69,8 @@ public class OngInviteService {
 
     private boolean canUserManageOngInvites(OngParticipantRole userRole){
         List<Integer> allowedRoles = List.of(
-                OngParticipantRole.Values.OWNER.getId(),
-                OngParticipantRole.Values.ADM.getId()
+                OngParticipantRole.Value.OWNER.getId(),
+                OngParticipantRole.Value.ADM.getId()
         );
         return allowedRoles.contains(userRole.getId());
     }
@@ -83,8 +83,14 @@ public class OngInviteService {
         UserProfile authenticatedUser = userProfileRepository.findById(authenticatedUserId)
                 .orElseThrow(() -> new UserNotExistsException("Authenticated user not found"));
 
-        UserProfile user = userProfileRepository.findById(request.userID())
+        UserProfile invitedUser = userProfileRepository.findById(request.userID())
                 .orElseThrow(() -> new UserNotExistsException("User not found"));
+
+        if (ongInviteRepository.existsById(new OngInviteId(ong, invitedUser)))
+            throw new UserAlreadyInvitedToONG("User is already invited to this ONG");
+
+        if (ongParticipantRepository.existsById(new OngParticipantId(ong, userProfileRepository.getReferenceById(request.userID()))))
+            throw new UserAlreadyParticipantOfONG("User is already a participant of this ONG");
 
         OngParticipantRole authenticatedUserRole = ongParticipantRepository.findById(new OngParticipantId(ong, authenticatedUser)).
                 orElseThrow(() -> new OngParticipantNotFoundException("Ong Participant not found")).getRole();
@@ -92,9 +98,15 @@ public class OngInviteService {
         if (!canUserManageOngInvites(authenticatedUserRole))
             throw new ForbiddenOperationException("Authenticated user hasn't permission to create invites");
 
-        OngParticipantRole role = ongParticipantRoleRepository.getReferenceByName(request.role());
+        OngParticipantRole.Value roleValue = OngParticipantRole.Value.fromName(request.role())
+                .orElseThrow(() -> new InvalidOngParticipantRoleException("Invalid role: " + request.role()));
 
-        OngInvite newInvite = new OngInvite(user, ong, role, Instant.now());
+        OngParticipantRole role = new OngParticipantRole(
+                roleValue.getId(),
+                roleValue.getName()
+        );
+
+        OngInvite newInvite = new OngInvite(invitedUser, ong, role, Instant.now(), userProfileRepository.getReferenceById(authenticatedUserId));
 
         ongInviteRepository.save(newInvite);
     }
@@ -133,7 +145,9 @@ public class OngInviteService {
         OngInvite invite = ongInviteRepository.findById(inviteId)
                 .orElseThrow(() -> new OngInviteNotFoundException("Authenticated user is not invited to this ONG"));
 
-        OngParticipant newOngParticipant = new OngParticipant(ong, user, invite.getRole());
+        OngParticipant newOngParticipant = new OngParticipant(
+                ong, user, invite.getRole(), Instant.now()
+        );
 
         ongInviteRepository.delete(invite);
         ongParticipantRepository.save(newOngParticipant);
