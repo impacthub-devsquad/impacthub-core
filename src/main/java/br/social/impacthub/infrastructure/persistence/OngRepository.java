@@ -118,4 +118,58 @@ public interface OngRepository extends JpaRepository<Ong, UUID> {
             @Param("userId") UUID currentUserId,
             Pageable pageable
     );
+
+    @Query(value =
+            """
+            SELECT
+                o.id as id,
+                o.userOwner.userId as userOwnerId,
+                o.name as name,
+                o.title as title,
+                o.description as description,
+                o.category as category,
+                o.createdAt as createdAt,
+                (
+                    SELECT COUNT(p)
+                    FROM OngParticipant p
+                    WHERE p.ong.id = o.id
+                ) as participantsCount,
+                (
+                    SELECT COUNT(f)  
+                    FROM OngFollower f
+                    WHERE f.ong.id = o.id
+                ) as followersCount,
+                (
+                    SELECT CASE
+                        WHEN COUNT(p) > 0 THEN true
+                        ELSE false
+                    END   
+                    FROM OngParticipant p
+                    WHERE p.ong.id = o.id AND p.user.userId = :userId
+                ) as isParticipant,
+                (
+                    SELECT CASE    
+                        WHEN COUNT(f) > 0 THEN true
+                        ELSE false
+                    END 
+                    FROM OngFollower f
+                    WHERE f.ong.id = o.id AND f.user.userId = :userId
+                ) as isFollowing,
+                (
+                    SELECT CASE    
+                        WHEN COUNT(i) > 0 THEN true
+                        ELSE false
+                    END 
+                    FROM OngInvite i
+                    WHERE i.ong.id = o.id AND i.user.userId = :userId
+                ) as isInvited
+            FROM Ong o
+            WHERE o.category.name = :category
+            """
+    )
+    Page<OngSummary> findAllOngSummaryByCategory(
+            @Param("userId") UUID authenticatedUserId,
+            @Param("category") String category,
+            Pageable pageable
+    );
 }

@@ -24,15 +24,24 @@ public class OngController implements OngControllerDocs {
     }
 
     @GetMapping
-    public ResponseEntity<StandardResponse<PagedResponse<OngSummaryResponse>>> getAll(Pageable pageable){
+    public ResponseEntity<StandardResponse<PagedResponse<OngSummaryResponse>>> getAll(
+            @RequestParam(required = false, defaultValue = "") String category,
+            Pageable pageable
+    ){
         UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
+
+        PagedResponse<OngSummaryResponse> response;
+
+        if(category.isBlank()){
+            response = ongService.getAll(authenticatedUserId, pageable);
+        } else {
+            response = ongService.getAllByCategory(authenticatedUserId, category, pageable);
+        }
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                        StandardResponse.success(
-                            ongService.getAll(authenticatedUserId, pageable)
-                        )
+                        StandardResponse.success(response)
                 );
     }
 
