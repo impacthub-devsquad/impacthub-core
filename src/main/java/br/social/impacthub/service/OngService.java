@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -54,6 +56,33 @@ public class OngService {
                         .toList()
                 )
                 .build();
+    }
+
+    public PagedResponse<OngSummaryResponse> getAllByCategory(UUID authenticatedUserId, String category, Pageable pageable) {
+        validateOngCategory(category);
+
+        Page<OngSummary> ongPage = ongRepository.findAllOngSummaryByCategory(authenticatedUserId, category, pageable);
+
+        return PagedResponse.<OngSummaryResponse>builder()
+                .page(ongPage.getNumber())
+                .size(ongPage.getSize())
+                .totalPages(ongPage.getTotalPages())
+                .totalElements(ongPage.getTotalElements())
+                .isLast(ongPage.isLast())
+                .content(ongPage.getContent().stream()
+                        .map(ong -> ongMapper.toResponse(ong))
+                        .toList()
+                )
+                .build();
+    }
+
+    private void validateOngCategory(String category){
+        List<String> validCategories = Arrays.stream(OngCategory.Values.values())
+                .map(OngCategory.Values::getName)
+                .toList();
+        if(!validCategories.contains(category)){
+            throw new InvalidOngCategoryException("Invalid ong category: " + category);
+        }
     }
 
     public OngSummaryResponse getById(UUID ongId, UUID authenticatedUserId) {
@@ -173,4 +202,5 @@ public class OngService {
 
         return ongMapper.toResponse(savedOng);
     }
+
 }

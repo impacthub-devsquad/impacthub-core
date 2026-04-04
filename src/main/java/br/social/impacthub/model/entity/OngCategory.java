@@ -21,6 +21,7 @@ public class OngCategory {
     @NotNull
     private String name;
 
+    @Getter
     public static enum Values {
         EDUCATION(1, "education"),
         HEALTH(2, "health"),
