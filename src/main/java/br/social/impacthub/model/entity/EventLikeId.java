@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data @AllArgsConstructor @NoArgsConstructor
 public class EventLikeId {
-    private Ong ong;
+    private Event event;
     private UserProfile user;
 }
