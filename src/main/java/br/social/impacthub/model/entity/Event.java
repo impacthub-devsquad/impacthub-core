@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
-@Table(name = "event")
+@Entity @Table(name = "event")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
