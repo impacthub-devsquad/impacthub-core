@@ -17,10 +17,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event {
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Id
-    @Column(name = "event_id")
-    private UUID eventId;
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    private UUID id;
 
     @NotNull
     private String title;
@@ -28,14 +27,14 @@ public class Event {
     @NotNull
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ong_id")
     private Ong ong;
 
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private UserProfile createdBy;
 }
