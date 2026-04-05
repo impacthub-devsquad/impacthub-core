@@ -20,7 +20,7 @@ public interface OngControllerDocs {
             @ApiResponse(responseCode = "200", description = "ONGs successfully retrieved."),
             @ApiResponse(responseCode = "404", description = "No ONGs found in the database.")
     })
-    ResponseEntity<StandardResponse<PagedResponse<OngSummaryResponse>>> getAll(Pageable pageable);
+    ResponseEntity<StandardResponse<PagedResponse<OngSummaryResponse>>> getAll(String category, Pageable pageable);
 
     @Operation(
             summary = "Get ONG by ID"
