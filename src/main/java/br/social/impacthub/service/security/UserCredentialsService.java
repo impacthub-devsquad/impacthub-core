@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -53,6 +54,7 @@ public class UserCredentialsService implements UserDetailsService {
         userCredentials.setEmail(email);
         userCredentials.setEncryptedPassword(encryptedPassword);
         userCredentials.setRole(UserRole.USER);
+        userCredentials.setCreatedAt(Instant.now());
 
         UserCredentialsResponse response = userCredentialsMapper.toResponse(
                 userCredentialsRepository.save(userCredentials)

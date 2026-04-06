@@ -48,7 +48,10 @@ public class OngParticipantService {
             UUID ongId,
             Pageable pageable
     ) {
-        Page<OngParticipant> page = ongParticipantRepository.findAllByOngId(ongId, pageable);
+        if (!ongRepository.existsById(ongId))
+            throw new OngNotFoundException();
+
+        Page<OngParticipant> page = ongParticipantRepository.findAllByOng_Id(ongId, pageable);
 
         return PagedResponse.<OngParticipantResponse>builder()
                 .page(page.getNumber())
@@ -58,7 +61,7 @@ public class OngParticipantService {
                 .totalElements(page.getTotalElements())
                 .content(
                     page.getContent().stream()
-                        .map(ongParticipant -> ongParticipantMapper.toResponse(ongParticipant))
+                        .map(ongParticipantMapper::toResponse)
                         .toList()
                 )
                 .build();
@@ -98,14 +101,14 @@ public class OngParticipantService {
 
     private boolean canUserManageParticipants(OngParticipant authenticatedUserParticipant) {
         List<Integer> allowedRoles = List.of(
-                OngParticipantRole.Values.ADM.getId(),
-                OngParticipantRole.Values.OWNER.getId()
+                OngParticipantRole.Value.ADM.getId(),
+                OngParticipantRole.Value.OWNER.getId()
         );
         return allowedRoles.contains(authenticatedUserParticipant.getRole().getId());
     }
 
     private boolean isUserOwner(OngParticipant ongParticipant){
-        return ongParticipant.getRole().getId().equals(OngParticipantRole.Values.OWNER.getId());
+        return ongParticipant.getRole().getId().equals(OngParticipantRole.Value.OWNER.getId());
     }
 
     public void leaveParticipant(UUID ongId, UUID userParticipantId){
@@ -157,9 +160,17 @@ public class OngParticipantService {
     }
 
     private boolean isOngParticipantRoleValid(String roleName){
-        List<String> allowedRoles = Arrays.stream(OngParticipantRole.Values.values())
+        List<String> allowedRoles = Arrays.stream(OngParticipantRole.Value.values())
                 .map(roleValue -> roleValue.getName())
                 .toList();
         return allowedRoles.contains(roleName);
+    }
+
+    public OngParticipantResponse get(UUID ongId, UUID userId) {
+        OngParticipant ongParticipant = ongParticipantRepository.findById(
+                new OngParticipantId(ongRepository.getReferenceById(ongId), userProfileRepository.getReferenceById(userId))
+        ).orElseThrow(() -> new UserNotExistsException("Participant not found"));
+
+        return ongParticipantMapper.toResponse(ongParticipant);
     }
 }

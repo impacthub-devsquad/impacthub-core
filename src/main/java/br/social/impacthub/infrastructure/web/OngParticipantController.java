@@ -30,6 +30,22 @@ public class OngParticipantController implements OngParticipantControllerDocs {
         this.ongParticipantService = ongParticipantService;
     }
 
+    @GetMapping("/{ongId}/invites")
+    public ResponseEntity<StandardResponse<PagedResponse<OngInviteResponse>>> getAllInvites(
+            @PathVariable UUID ongId,
+            Pageable pageable
+    ){
+        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        StandardResponse.success(
+                                ongInviteService.getAllByOngId(ongId, authenticatedUserId, pageable)
+                        )
+                );
+    }
+
     @PostMapping("/{ongId}/invites")
     public ResponseEntity<StandardResponse<Void>> inviteUser(
             @PathVariable UUID ongId,
@@ -144,6 +160,19 @@ public class OngParticipantController implements OngParticipantControllerDocs {
                 .status(HttpStatus.OK)
                 .body(
                         StandardResponse.success()
+                );
+    }
+
+    @GetMapping("/{ongId}/participants/{userId}")
+    public ResponseEntity<StandardResponse<OngParticipantResponse>> getParticipant(
+            @PathVariable UUID ongId,
+            @PathVariable UUID userId
+    ){
+        OngParticipantResponse response = ongParticipantService.get(ongId, userId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        StandardResponse.success(response)
                 );
     }
 }
