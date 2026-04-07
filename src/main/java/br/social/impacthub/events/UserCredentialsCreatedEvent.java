@@ -12,6 +12,7 @@ import java.util.UUID;
 public class UserCredentialsCreatedEvent extends ApplicationEvent {
     @NotNull private UUID userId;
     @NotBlank private String username;
+    @NotBlank private String name;
     @Email private String email;
 
     public UserCredentialsCreatedEvent(UUID userId, String username, String email, Object source) {
