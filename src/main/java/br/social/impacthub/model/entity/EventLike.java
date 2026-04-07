@@ -4,23 +4,23 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.Instant;
 
-@Entity @Table(name = "event_participant")
+@Entity @Table(name = "event_like")
+@IdClass(EventLikeId.class)
 @Data @AllArgsConstructor @NoArgsConstructor
-@IdClass(EventParticipantId.class)
-public class EventParticipant {
+public class EventLike {
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Event event;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserProfile user;
+
+    @Column(name = "create_at")
+    private Instant createdAt;
 }

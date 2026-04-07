@@ -11,15 +11,16 @@ public class UserProfileMapper {
         return new UserProfileResponse(
                 userProfile.getUserId(),
                 userProfile.getUsername(),
+                userProfile.getName(),
                 userProfile.getEmail()
         );
     }
 
-    public UserProfileResponse toResponse(AuthenticatedUser authenticatedUser) {
-        return new UserProfileResponse(
-                authenticatedUser.userId(),
-                authenticatedUser.username(),
-                authenticatedUser.email()
-        );
-    }
+//    public UserProfileResponse toResponse(AuthenticatedUser authenticatedUser) {
+//        return new UserProfileResponse(
+//                authenticatedUser.userId(),
+//                authenticatedUser.username(),
+//                authenticatedUser.email()
+//        );
+//    }
 }

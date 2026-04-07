@@ -440,6 +440,7 @@ public class UserCredentialsServiceTest {
         UserProfile userProfile = new UserProfile(
                 userId,
                 newUsername,
+                "name",
                 "test@gmail.com",
                 "description",
                 Instant.now()
@@ -468,6 +469,7 @@ public class UserCredentialsServiceTest {
         UserProfile userProfile = new UserProfile(
                 userId,
                 "username",
+                "name",
                 "test@gmail.com",
                 "description",
                 Instant.now()

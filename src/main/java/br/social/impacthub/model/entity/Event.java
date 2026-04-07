@@ -5,22 +5,22 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
-@Table(name = "event")
+@Entity @Table(name = "event")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event {
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Id
-    @Column(name = "event_id")
-    private UUID eventId;
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    private UUID id;
 
     @NotNull
     private String title;
@@ -28,14 +28,19 @@ public class Event {
     @NotNull
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ong_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Ong ong;
+
+    @Column(name = "views_count")
+    private Long viewsCount;
 
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserProfile createdBy;
 }
