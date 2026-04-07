@@ -1,5 +1,6 @@
 package br.social.impacthub.model.dto;
 
+import br.social.impacthub.model.entity.UserProfile;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
@@ -11,7 +12,8 @@ public record EventResponse(
         String description,
         UUID ongId,
         Instant createdAt,
-        UUID createdBy,
+        UserProfileResponse createdBy,
+        Long viewsCount,
         Long likesCount,
         Boolean isLiked
 ) {

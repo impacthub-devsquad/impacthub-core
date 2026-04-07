@@ -2,6 +2,7 @@ package br.social.impacthub.service.mapper;
 
 import br.social.impacthub.model.dto.EventResponse;
 import br.social.impacthub.model.dto.EventSummary;
+import br.social.impacthub.model.dto.UserProfileResponse;
 import br.social.impacthub.model.entity.Event;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,13 @@ public class EventMapper {
                 eventSummary.getDescription(),
                 eventSummary.getOngId(),
                 eventSummary.getCreatedAt(),
-                eventSummary.getCreatedBy(),
+                new UserProfileResponse(
+                    eventSummary.getCreatedBy().getUserId(),
+                    eventSummary.getCreatedBy().getUsername(),
+                    eventSummary.getCreatedBy().getName(),
+                    eventSummary.getCreatedBy().getEmail()
+                ),
+                eventSummary.getViewsCount(),
                 eventSummary.getLikesCount(),
                 eventSummary.getIsLiked()
         );

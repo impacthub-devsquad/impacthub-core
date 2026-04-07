@@ -6,6 +6,7 @@ import br.social.impacthub.model.entity.OngCategory;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -188,6 +189,42 @@ public class GlobalExceptionHandler {
                                                 .toList()
                                 )
                         )
+                );
+    }
+
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<StandardResponse<Void>> handleEventNotFoundException(EventNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<StandardResponse<Void>> handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail("Required request body is missing")
+                );
+    }
+
+    @ExceptionHandler(UserAlreadyLikedEventException.class)
+    public ResponseEntity<StandardResponse<Void>> handleUserAlreadyLikedEvent(UserAlreadyLikedEventException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
+                );
+    }
+
+    @ExceptionHandler(UserNotLikedEventYetException.class)
+    public ResponseEntity<StandardResponse<Void>> handleUserNotLikedEventYet(UserNotLikedEventYetException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        StandardResponse.fail(exception.getMessage())
                 );
     }
 }

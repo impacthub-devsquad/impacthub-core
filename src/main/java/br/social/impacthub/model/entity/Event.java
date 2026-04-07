@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -28,12 +30,17 @@ public class Event {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ong_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Ong ong;
+
+    @Column(name = "views_count")
+    private Long viewsCount;
 
     @Column(name = "created_at")
     private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserProfile createdBy;
 }

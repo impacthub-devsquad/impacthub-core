@@ -16,7 +16,7 @@ public class UserCredentialsCreatedEventListener implements ApplicationListener<
 
     @Override
     public void onApplicationEvent(@Valid UserCredentialsCreatedEvent event) {
-        userProfileService.create(event.getUserId(), event.getUsername(), event.getEmail());
+        userProfileService.create(event.getUserId(), event.getUsername(), "", event.getEmail());
     }
 
     @Override

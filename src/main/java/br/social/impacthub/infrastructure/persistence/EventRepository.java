@@ -2,6 +2,7 @@ package br.social.impacthub.infrastructure.persistence;
 
 import br.social.impacthub.model.dto.EventSummary;
 import br.social.impacthub.model.entity.Event;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +21,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             e.description as description,
             e.ong.id as ongId,
             e.createdAt as createdAt,
-            e.createdBy.userId as createdBy,
+            e.createdBy as createdBy,
+            e.viewsCount as viewsCount,
             (
                 SELECT COUNT(l)
                 FROM EventLike l
@@ -38,7 +40,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         WHERE e.id = :eventId
         """
     )
-    Optional<EventSummary> getEventSummary(
+    Optional<EventSummary> getEventSummaryById(
             @Param("eventId") UUID eventId,
             @Param("userId") UUID authenticatedUserId
     );
@@ -51,7 +53,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             e.description as description,
             e.ong.id as ongId,
             e.createdAt as createdAt,
-            e.createdBy.userId as createdBy,
+            e.createdBy as createdBy,
+            e.viewsCount as viewsCount,
             (
                 SELECT COUNT(l)
                 FROM EventLike l
@@ -68,7 +71,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
         FROM Event e
         """
     )
-    List<EventSummary> getAllEventSummary(
+    Page<EventSummary> getAllEventSummary(
             @Param("userId") UUID authenticatedUserId,
             Pageable pageable
     );
@@ -81,7 +84,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
                 e.description as description,
                 e.ong.id as ongId,
                 e.createdAt as createdAt,
-                e.createdBy.userId as createdBy,
+                e.createdBy as createdBy,
+                e.viewsCount as viewsCount,
                 (
                     SELECT COUNT(l)
                     FROM EventLike l
@@ -99,7 +103,7 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
             WHERE e.ong.id = :ongId
             """
     )
-    List<EventSummary> getAllEventSummaryByOngId(
+    Page<EventSummary> getAllEventSummaryByOngId(
             @Param("ongId") UUID ongID,
             @Param("userId") UUID authenticatedUserId,
             Pageable pageable
