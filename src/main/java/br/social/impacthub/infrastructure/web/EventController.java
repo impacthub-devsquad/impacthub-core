@@ -1,5 +1,6 @@
 package br.social.impacthub.infrastructure.web;
 
+import br.social.impacthub.infrastructure.web.docs.EventControllerDocs;
 import br.social.impacthub.model.dto.*;
 import br.social.impacthub.service.EventService;
 import br.social.impacthub.service.security.AuthService;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
-public class EventController {
+public class EventController implements EventControllerDocs {
     private final EventService eventService;
     private final AuthService authService;
 

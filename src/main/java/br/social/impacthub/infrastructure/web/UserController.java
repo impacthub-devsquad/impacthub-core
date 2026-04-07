@@ -1,5 +1,6 @@
 package br.social.impacthub.infrastructure.web;
 
+import br.social.impacthub.infrastructure.web.docs.UserControllerDocs;
 import br.social.impacthub.model.dto.PagedResponse;
 import br.social.impacthub.model.dto.StandardResponse;
 import br.social.impacthub.model.dto.UpdateUserRequest;
@@ -23,7 +24,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserController {
+public class UserController implements UserControllerDocs {
     private UserProfileService userProfileService;
     private UserProfileMapper userProfileMapper;
     private AuthService authService;
