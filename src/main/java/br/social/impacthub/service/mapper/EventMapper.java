@@ -15,7 +15,8 @@ public class EventMapper {
                 eventSummary.getOngId(),
                 eventSummary.getCreatedAt(),
                 eventSummary.getCreatedBy(),
-                eventSummary.getLikesCount()
+                eventSummary.getLikesCount(),
+                eventSummary.getIsLiked()
         );
     }
 

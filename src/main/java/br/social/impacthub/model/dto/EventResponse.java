@@ -12,6 +12,7 @@ public record EventResponse(
         UUID ongId,
         Instant createdAt,
         UUID createdBy,
-        Long likesCount
+        Long likesCount,
+        Boolean isLiked
 ) {
 }

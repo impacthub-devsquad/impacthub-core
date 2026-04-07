@@ -11,4 +11,5 @@ public interface EventSummary {
     Instant getCreatedAt();
     UUID getCreatedBy();
     Long getLikesCount();
+    Boolean getIsLiked();
 }
