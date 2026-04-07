@@ -48,12 +48,13 @@ public class UserProfileService {
                 .build();
     }
 
-    public UserProfileResponse create(UUID userId, String username, String email){
+    public UserProfileResponse create(UUID userId, String username, String name, String email){
         return userProfileMapper.toResponse(
                 userProfileRepository.save(
                         new UserProfile(
                                 userId,
                                 username,
+                                name,
                                 email,
                                 "",
                                 Instant.now()

@@ -57,13 +57,13 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<StandardResponse<UserProfileResponse>> getAuthenticatedUser(){
+        UUID authenticatedUserId = authService.getAuthenticatedUser().userId();
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                         StandardResponse.success(
-                            userProfileMapper.toResponse(
-                                    authService.getAuthenticatedUser()
-                            )
+                            userProfileService.getById(authenticatedUserId)
                         )
                 );
     }
