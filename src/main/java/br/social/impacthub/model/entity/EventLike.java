@@ -21,6 +21,6 @@ public class EventLike {
     @JoinColumn(name = "user_id")
     private UserProfile user;
 
-    @Column(name = "create_at")
+    @Column(name = "created_at")
     private Instant createdAt;
 }
